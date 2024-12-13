@@ -6,6 +6,7 @@
 1) pip install -r requirements.txt
 2) python server.py
 3) Open another terminal and use the CLI to interact with the server:
+   
    Commands Example
    python cli.py add file1.txt file2.txt
    python cli.py ls
@@ -17,6 +18,7 @@
 ###With Using Docker File
 1) docker build -t file-store .
 2) docker run -p 5000:5000 -v /d/file-system/file_storage:/app/files file-store
+   
    Commands Example
    python cli.py add file1.txt file2.txt
    python cli.py ls
