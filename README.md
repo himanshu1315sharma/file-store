@@ -14,7 +14,7 @@
    python cli.py wc
    python cli.py freq-words --limit 5 --order asc
 
-##With Using Docker File
+###With Using Docker File
 1) docker build -t file-store .
 2) docker run -p 5000:5000 -v /d/file-system/file_storage:/app/files file-store
    Commands Example
