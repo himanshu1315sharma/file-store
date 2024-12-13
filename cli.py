@@ -22,6 +22,31 @@ def list_files():
         print("Error:", response.json())
 
 
+def delete_file(filename):
+    response = requests.delete(f"{SERVER_URL}/{filename}")
+    print(response.json())
+
+
+def update_file(filename):
+    if not os.path.exists(filename):
+        print(f"File '{filename}' does not exist locally.")
+        return
+
+    with open(filename, "rb") as f:
+        files_payload = {"file": f}
+        response = requests.put(f"{SERVER_URL}/{filename}", files=files_payload)
+        print(response.json())
+
+
+def word_count():
+    response = requests.get(f"{SERVER_URL}/wordcount")
+    print(response.json())
+
+
+def frequent_words(limit, order):
+    params = {"limit": limit, "order": order}
+    response = requests.get(f"{SERVER_URL}/frequent", params=params)
+    print(response.json())
 
 
 if __name__ == "__main__":
@@ -35,6 +60,21 @@ if __name__ == "__main__":
     # List files
     parser_list = subparsers.add_parser("ls", help="List files in the store")
 
+    # Remove file
+    parser_remove = subparsers.add_parser("rm", help="Remove a file from the store")
+    parser_remove.add_argument("filename", help="File to remove")
+
+    # Update file
+    parser_update = subparsers.add_parser("update", help="Update a file in the store")
+    parser_update.add_argument("filename", help="File to update")
+
+    # Word count
+    parser_wc = subparsers.add_parser("wc", help="Get word count of all files")
+
+    # Frequent words
+    parser_freq = subparsers.add_parser("freq-words", help="Get frequent words")
+    parser_freq.add_argument("--limit", "-n", type=int, default=10, help="Number of frequent words")
+    parser_freq.add_argument("--order", choices=["asc", "desc"], default="desc", help="Order of words")
 
     args = parser.parse_args()
 
@@ -42,5 +82,13 @@ if __name__ == "__main__":
         add_files(args.files)
     elif args.command == "ls":
         list_files()
+    elif args.command == "rm":
+        delete_file(args.filename)
+    elif args.command == "update":
+        update_file(args.filename)
+    elif args.command == "wc":
+        word_count()
+    elif args.command == "freq-words":
+        frequent_words(args.limit, args.order)
     else:
         parser.print_help()
